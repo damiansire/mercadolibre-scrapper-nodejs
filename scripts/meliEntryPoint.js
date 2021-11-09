@@ -7,14 +7,14 @@ class ParserHandler {
     await this.meliData.initBrowser();
     this.meliBdDao = new MeliBdDao();
   }
+
   async sendToParserFromBarrio(barrio = "pocitos") {
     const pageAmount = await this.meliData.getPageAmountForBarrio(barrio);
-
-    for (let actualPage = 1; actualPage <= pageAmount; actualPage++) {
+    for (let actualPage = 42; actualPage <= pageAmount; actualPage++) {
       const apartamentLink = await this.meliData.getApartamentsLinks(
         actualPage
       );
-      this.MeliBdDao.saveApartamentsLinks(apartamentLink);
+      await this.meliBdDao.saveApartamentsLinks(apartamentLink);
     }
   }
 

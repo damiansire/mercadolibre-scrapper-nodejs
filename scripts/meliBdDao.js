@@ -18,6 +18,7 @@ class MeliBdDao {
     this.client = new Client(config);
     this.client.connect();
   }
+
   async saveApartamentsLinks(apartaments) {
     for (let apartament of apartaments) {
       const text = `INSERT INTO public.pendingsaves(link) VALUES($1) RETURNING *`;
