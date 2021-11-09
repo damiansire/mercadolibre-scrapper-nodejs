@@ -1,3 +1,5 @@
+const { attributeTextToDataBaseName } = require("./meliLibs");
+
 class SearchPageParser {
   static async getPageAmount(page) {
     const pageNumberText = await page.$eval(
@@ -38,7 +40,7 @@ class HousePageParser {
     let houseData = {};
 
     //Cambiar por promise.all
-    for (attribute in textAttributeToScrap) {
+    for (let attribute in textAttributeToScrap) {
       try {
         houseData[attribute] = await page.$eval(
           textAttributeToScrap[attribute],
@@ -67,7 +69,7 @@ class HousePageParser {
     );
 
     for (let index = 0; index < labelText.length; index++) {
-      const dataBaseLabelName = convertTextToAttributeName(labelText[index]);
+      const dataBaseLabelName = attributeTextToDataBaseName(labelText[index]);
       houseData[dataBaseLabelName] = valueText[index];
     }
 

@@ -10,18 +10,27 @@ class ParserHandler {
 
   async sendToParserFromBarrio(barrio = "pocitos") {
     const pageAmount = await this.meliData.getPageAmountForBarrio(barrio);
-    for (let actualPage = 42; actualPage <= pageAmount; actualPage++) {
+    // <= pageAmount
+    for (let actualPage = 0; actualPage <= 1; actualPage++) {
       const apartamentLink = await this.meliData.getApartamentsLinks(
         actualPage
       );
+      console.log(apartamentLink);
       await this.meliBdDao.saveApartamentsLinks(apartamentLink);
     }
   }
 
+  //Empieza a parsear las casas pendientes
   async startPendingParser() {
-    const apartamentList = await getPagesToParser();
+    //Obtiene las casas pendientes
+    const apartamentList = await this.meliBdDao.getPagesToParser();
+    //TODO: Cambiar esto por una iteracion, mientras queden casas pendientes
     const selectedApartament = apartamentList[0];
-    const result = await parserHouseUrl(selectedApartament.link);
+    //Obtiene la informacion de la casa de una url
+    const result = await this.meliData.getHouseDataFromUrl(
+      selectedApartament.link
+    );
+    //Guardar en la base de datos la informacion
   }
 }
 

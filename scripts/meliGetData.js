@@ -45,12 +45,12 @@ class MeliData {
     return housesData;
   }
 
-  async getHouseUrl(url) {
+  async getHouseDataFromUrl(url) {
     //Voy a la url con los apartamento
     await this.page.goto(url);
 
-    const result = await parserHousePage(page);
-
+    const result = await HousePageParser.parserHousePage(this.page);
+    debugger;
     return result;
   }
 }

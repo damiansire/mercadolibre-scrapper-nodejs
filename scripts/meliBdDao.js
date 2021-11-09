@@ -32,12 +32,12 @@ class MeliBdDao {
     }
   }
 
-  async getPageToParser() {
+  async getPagesToParser() {
     const client = new Client(config);
     client.connect();
     let res;
     try {
-      const getElementQuery = "SELECT * FROM public.pendingsaves";
+      const getElementQuery = "SELECT * FROM public.pendingsaves limit 10";
       res = await this.client.query(getElementQuery);
     } catch (err) {
       console.log(err.stack);
