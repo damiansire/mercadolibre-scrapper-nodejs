@@ -8,7 +8,20 @@ function generatePageUrl(
     let fromNumber = 1 + 48 * (pageNumber - 1);
     fromText = `_Desde_${fromNumber}`;
   }
-  const pageUrl = `https://listado.mercadolibre.com.uy/inmuebles/apartamentos/alquiler/${departamento}/${barrio}${fromText}/`;
+
+  const pageUrl = `https://listado.mercadolibre.com.uy/inmuebles/apartamentos/alquiler/${departamento}/${barrio}${fromText}_NoIndex_True`;
+
+  return pageUrl;
+}
+
+function generateForTodayPageUrl(pageNumber, departamento = "montevideo") {
+  let fromText = "";
+  if (pageNumber >= 1) {
+    let fromNumber = 1 + 48 * (pageNumber - 1);
+    fromText = `_Desde_${fromNumber}`;
+  }
+
+  const pageUrl = `https://listado.mercadolibre.com.uy/inmuebles/apartamentos/alquiler/${departamento}/${fromText}_PublishedToday_YES_NoIndex_True`;
 
   return pageUrl;
 }
@@ -41,4 +54,5 @@ function attributeTextToDataBaseName(text) {
 module.exports = {
   generatePageUrl,
   attributeTextToDataBaseName,
+  generateForTodayPageUrl,
 };

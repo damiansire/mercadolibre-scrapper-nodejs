@@ -13,6 +13,9 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "pg": "^8.7.1",
-    "puppeteer": "^11.0.0"
+    "pg-hstore": "^2.3.4",
+    "puppeteer": "^11.0.0",
+    "sequelize": "^6.9.0",
+    "sequelize-cli": "^6.3.0"
   }
 }

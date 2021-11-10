@@ -10,27 +10,41 @@ class ParserHandler {
 
   async sendToParserFromBarrio(barrio = "pocitos") {
     const pageAmount = await this.meliData.getPageAmountForBarrio(barrio);
-    // <= pageAmount
-    for (let actualPage = 0; actualPage <= 1; actualPage++) {
+    for (let actualPage = 1; actualPage <= pageAmount; actualPage++) {
       const apartamentLink = await this.meliData.getApartamentsLinks(
         actualPage
       );
-      console.log(apartamentLink);
       await this.meliBdDao.saveApartamentsLinks(apartamentLink);
+    }
+  }
+
+  async sendToParserForToday() {
+    const pageAmount = await this.meliData.getPageAmountForToday();
+    console.info(`Se van a parsear ${pageAmount} paginas`);
+    for (let actualPage = 1; actualPage <= pageAmount; actualPage++) {
+      console.info(`Obteniendo apartamentos para la pagina ${actualPage}`);
+      const apartamentLink = await this.meliData.getApartamentsLinksForToday(
+        actualPage
+      );
+      console.info(
+        `Se han obtenido ${apartamentLink.length} apartamentos para esta pagina`
+      );
+      await this.meliBdDao.saveApartamentsLinks(apartamentLink);
+      console.info("Se ha terminado de guardar");
     }
   }
 
   //Empieza a parsear las casas pendientes
   async startPendingParser() {
-    //Obtiene las casas pendientes
+    console.info("Obteniendo las paginas pendientes");
     const apartamentList = await this.meliBdDao.getPagesToParser();
-    //TODO: Cambiar esto por una iteracion, mientras queden casas pendientes
-    const selectedApartament = apartamentList[0];
-    //Obtiene la informacion de la casa de una url
-    const result = await this.meliData.getHouseDataFromUrl(
-      selectedApartament.link
-    );
-    //Guardar en la base de datos la informacion
+
+    for (const apartament of apartamentList) {
+      console.info(`Parseando apartamento ${apartament.id}`);
+      const result = await this.meliData.getHouseDataFromUrl(apartament.link);
+      console.info(`Guardando apartamento ${apartament.id}`);
+      this.meliBdDao.saveApartamentData(result);
+    }
   }
 }
 

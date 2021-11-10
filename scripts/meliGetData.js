@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { generatePageUrl } = require("./meliLibs");
+const { generatePageUrl, generateForTodayPageUrl } = require("./meliLibs");
 const {
   SearchPageParser,
   HousePreviewParser,
@@ -28,6 +28,17 @@ class MeliData {
     return Number(pageAmount);
   }
 
+  async getPageAmountForToday() {
+    const pageUrl = generateForTodayPageUrl(1);
+    //Voy a la url con los apartamento
+    await this.page.goto(pageUrl);
+    //Aca selecciono un apartamento
+
+    const pageAmount = await SearchPageParser.getPageAmount(this.page);
+
+    return Number(pageAmount);
+  }
+
   async getApartamentsLinks(pageNumber) {
     const pageUrl = generatePageUrl(pageNumber);
     //Voy a la url con los apartamento
@@ -45,12 +56,28 @@ class MeliData {
     return housesData;
   }
 
+  async getApartamentsLinksForToday(pageNumber) {
+    const pageUrl = generateForTodayPageUrl(pageNumber);
+    //Voy a la url con los apartamento
+    await this.page.goto(pageUrl);
+    //Aca selecciono un apartamento
+    const housesElement = await this.page.$$(".ui-search-layout__item");
+
+    //Todo: Cambiar esto por promise.all
+    let housesData = [];
+    for (let houseElement of housesElement) {
+      const houseData = await HousePreviewParser.getLink(houseElement);
+      const link = houseData.link.split("#")[0];
+      housesData.push(link);
+    }
+
+    return housesData;
+  }
+
   async getHouseDataFromUrl(url) {
     //Voy a la url con los apartamento
     await this.page.goto(url);
-
     const result = await HousePageParser.parserHousePage(this.page);
-    debugger;
     return result;
   }
 }
