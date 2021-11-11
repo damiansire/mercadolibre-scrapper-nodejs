@@ -43,8 +43,7 @@ class ParserHandler {
       console.info(`Parseando apartamento ${apartament.id}`);
       const result = await this.meliData.getHouseDataFromUrl(apartament.link);
       console.info(`Guardando apartamento ${apartament.id}`);
-      //this.meliBdDao.saveApartamentData(result);
-      debugger;
+      this.meliBdDao.saveApartamentData(result);
       console.info(`Parseando imagenes de ${apartament.link}`);
       const imagesLinks = await this.meliData.getImageDataFromUrl(
         apartament.link
