@@ -80,6 +80,12 @@ class MeliData {
     const result = await HousePageParser.parserHousePage(this.page);
     return result;
   }
+
+  async getImageDataFromUrl(url) {
+    await this.page.goto(url);
+    const imagesLinks = await HousePageParser.parserAllImg(this.page);
+    return imagesLinks;
+  }
 }
 
 module.exports = MeliData;

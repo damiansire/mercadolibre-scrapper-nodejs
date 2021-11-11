@@ -77,6 +77,16 @@ class HousePageParser {
 
     return houseData;
   }
+
+  static async parserAllImg(page) {
+    const { picture_config, pictures } = await page.evaluate(() => {
+      return __PRELOADED_STATE__.initialState.components.gallery;
+    });
+
+    return pictures.map((img) =>
+      picture_config.template.replace("{id}", img.id)
+    );
+  }
 }
 
 //La preview es lo que se ve en la pagina de busqueda

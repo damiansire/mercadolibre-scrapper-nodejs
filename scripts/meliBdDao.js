@@ -55,6 +55,22 @@ class MeliBdDao {
     }
   }
 
+  async saveImgLink(imagesLink, viviendaId) {
+    for (let imgLink of imagesLink) {
+      //Cuidado la inyeccion sql
+      const text = `INSERT INTO public.imagenes(viviendaid,imageurl) VALUES($1,$2) RETURNING *`;
+      const values = [viviendaId, imgLink];
+      try {
+        const res = await this.client.query(text, values);
+        console.log(
+          `Se ha guardado la imagen ${imgLink} de la vivienda ${viviendaId}`
+        );
+      } catch (err) {
+        console.error(err.stack);
+      }
+    }
+  }
+
   async getPagesToParser() {
     const client = new Client(config);
     client.connect();
