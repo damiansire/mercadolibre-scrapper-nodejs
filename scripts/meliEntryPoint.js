@@ -37,18 +37,21 @@ class ParserHandler {
   //Empieza a parsear las casas pendientes
   async startPendingParser() {
     console.info("Obteniendo las paginas pendientes");
-    const apartamentList = await this.meliBdDao.getPagesToParser();
-    for (const apartament of apartamentList) {
-      try {
-        await this.parserApartamentData(apartament);
-        await this.parserImage(apartament);
-        await this.meliBdDao.deletePendingParser(apartament.link);
-        console.info(
-          `\n \n El apartamento ${apartament.link} fue parseado correctamente \n \n`
-        );
-      } catch (err) {
-        console.log(err.message);
+    let apartamentList = await this.meliBdDao.getPagesToParser(5);
+    while (apartamentList.length) {
+      for (const apartament of apartamentList) {
+        try {
+          await this.parserApartamentData(apartament);
+          await this.parserImage(apartament);
+          await this.meliBdDao.deletePendingParser(apartament.link);
+          console.info(
+            `\n \n El apartamento ${apartament.link} fue parseado correctamente \n \n`
+          );
+        } catch (err) {
+          console.log(err.message);
+        }
       }
+      apartamentList = await this.meliBdDao.getPagesToParser(5);
     }
   }
 

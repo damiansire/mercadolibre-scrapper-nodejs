@@ -81,12 +81,12 @@ class MeliBdDao {
     }
   }
 
-  async getPagesToParser() {
+  async getPagesToParser(numberOfLinks) {
     const client = new Client(config);
     client.connect();
     let res;
     try {
-      const getElementQuery = "SELECT * FROM public.pendingparser limit 100";
+      const getElementQuery = `SELECT * FROM public.pendingparser limit ${numberOfLinks}`;
       res = await this.client.query(getElementQuery);
     } catch (err) {
       console.log(err.stack);
