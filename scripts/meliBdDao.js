@@ -21,7 +21,7 @@ class MeliBdDao {
 
   async saveApartamentsLinks(links) {
     for (let link of links) {
-      const text = `INSERT INTO public.pendingsaves(link) VALUES($1) RETURNING *`;
+      const text = `INSERT INTO public.pendingparser(link) VALUES($1) RETURNING *`;
       const values = [link];
       try {
         const res = await this.client.query(text, values);
@@ -44,30 +44,39 @@ class MeliBdDao {
     }
 
     const fields = Object.keys(apartamentData).join(",");
-    debugger;
     const text = `INSERT INTO public.viviendas(${fields}) VALUES(${valuesKeys}) RETURNING *`;
     const values = Object.values(apartamentData);
     try {
+      //Si da un error el insert, va al catch
       const res = await this.client.query(text, values);
       console.log(`Se ha guardado el apartamento ${apartamentData.title}`);
     } catch (err) {
-      console.error(err.stack);
+      console.error(`${err.name} : ${err.message}`);
+      throw new Error(`Problemas con el apartamento: ${apartamentData.link}`);
     }
   }
 
-  async saveImgLink(imagesLink, viviendaId) {
+  //Pasar esto a ORM
+  async saveImagesLink(imagesLink, viviendaId) {
     for (let imgLink of imagesLink) {
-      //Cuidado la inyeccion sql
-      const text = `INSERT INTO public.imagenes(viviendaid,imageurl) VALUES($1,$2) RETURNING *`;
-      const values = [viviendaId, imgLink];
-      try {
-        const res = await this.client.query(text, values);
-        console.log(
-          `Se ha guardado la imagen ${imgLink} de la vivienda ${viviendaId}`
-        );
-      } catch (err) {
-        console.error(err.stack);
-      }
+      await this.saveImg(imgLink, viviendaId);
+    }
+  }
+
+  async saveImg(imgLink, viviendaId) {
+    //Cuidado la inyeccion sql
+    const text = `INSERT INTO public.imagenes(viviendaid,imageurl) VALUES($1,$2) RETURNING *`;
+    const values = [viviendaId, imgLink];
+    try {
+      debugger;
+      const res = await this.client.query(text, values);
+      console.log(
+        `Se ha guardado la imagen ${imgLink} de la vivienda ${viviendaId}`
+      );
+      console.log(res);
+    } catch (err) {
+      console.error(err.message);
+      throw new Error(`Problemas con el apartamento ${err.link}`);
     }
   }
 
@@ -76,7 +85,7 @@ class MeliBdDao {
     client.connect();
     let res;
     try {
-      const getElementQuery = "SELECT * FROM public.pendingsaves limit 100";
+      const getElementQuery = "SELECT * FROM public.pendingparser limit 5";
       res = await this.client.query(getElementQuery);
     } catch (err) {
       console.log(err.stack);

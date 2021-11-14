@@ -38,19 +38,30 @@ class ParserHandler {
   async startPendingParser() {
     console.info("Obteniendo las paginas pendientes");
     const apartamentList = await this.meliBdDao.getPagesToParser();
-
     for (const apartament of apartamentList) {
-      console.info(`Parseando apartamento ${apartament.id}`);
-      const result = await this.meliData.getHouseDataFromUrl(apartament.link);
-      console.info(`Guardando apartamento ${apartament.id}`);
-      this.meliBdDao.saveApartamentData(result);
-      console.info(`Parseando imagenes de ${apartament.link}`);
-      const imagesLinks = await this.meliData.getImageDataFromUrl(
-        apartament.link
-      );
-      console.info(`Guardando imagenes de ${apartament.link}`);
-      this.meliBdDao.saveImgLink(imagesLinks, apartament.link);
+      try {
+        await this.parserApartamentData(apartament);
+        await this.parserImage(apartament);
+      } catch (err) {
+        console.log(err.message);
+      }
     }
+  }
+
+  async parserApartamentData(apartament) {
+    console.info(`Parseando apartamento ${apartament.id}`);
+    const result = await this.meliData.getHouseDataFromUrl(apartament.link);
+    console.info(`Guardando apartamento ${apartament.id}`);
+    await this.meliBdDao.saveApartamentData(result);
+  }
+
+  async parserImage(apartament) {
+    console.info(`Parseando imagenes de ${apartament.link}`);
+    const imagesLinks = await this.meliData.getImageDataFromUrl(
+      apartament.link
+    );
+    console.info(`Guardando imagenes de ${apartament.link}`);
+    await this.meliBdDao.saveImagesLink(imagesLinks, apartament.link);
   }
 }
 
