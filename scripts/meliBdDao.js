@@ -73,10 +73,11 @@ class MeliBdDao {
       console.log(
         `Se ha guardado la imagen ${imgLink} de la vivienda ${viviendaId}`
       );
-      console.log(res);
     } catch (err) {
       console.error(err.message);
-      throw new Error(`Problemas con el apartamento ${err.link}`);
+      throw new Error(
+        `Problemas la imagen ${imgLink} del apartamento ${viviendaId}`
+      );
     }
   }
 
@@ -85,12 +86,28 @@ class MeliBdDao {
     client.connect();
     let res;
     try {
-      const getElementQuery = "SELECT * FROM public.pendingparser limit 5";
+      const getElementQuery = "SELECT * FROM public.pendingparser limit 100";
       res = await this.client.query(getElementQuery);
     } catch (err) {
       console.log(err.stack);
     }
     return res.rows;
+  }
+
+  async deletePendingParser(apartamentLink) {
+    //Cuidado la inyeccion sql
+    const text = `DELETE FROM public.pendingparser WHERE link = $1 RETURNING *`;
+    const values = [apartamentLink];
+    try {
+      debugger;
+      const res = await this.client.query(text, values);
+      console.log(`Se ha ha eliminado de pending parser ${apartamentLink}`);
+    } catch (err) {
+      console.error(err.message);
+      throw new Error(
+        `Problemas al eliminar de la tabla pendingParser el apartamento ${apartamentLink}`
+      );
+    }
   }
 }
 

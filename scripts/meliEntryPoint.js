@@ -42,6 +42,10 @@ class ParserHandler {
       try {
         await this.parserApartamentData(apartament);
         await this.parserImage(apartament);
+        await this.meliBdDao.deletePendingParser(apartament.link);
+        console.info(
+          `\n \n El apartamento ${apartament.link} fue parseado correctamente \n \n`
+        );
       } catch (err) {
         console.log(err.message);
       }
