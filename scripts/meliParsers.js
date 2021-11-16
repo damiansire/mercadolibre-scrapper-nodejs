@@ -1,4 +1,7 @@
-const { attributeTextToDataBaseName } = require("./meliLibs");
+const {
+  attributeTextToDataBaseName,
+  getViviendaIdFromUrl,
+} = require("./meliLibs");
 
 class SearchPageParser {
   static async getPageAmount(page) {
@@ -73,7 +76,8 @@ class HousePageParser {
       houseData[dataBaseLabelName] = valueText[index];
     }
 
-    houseData.link = page.url();
+    houseData.link = await page.url();
+    houseData.id = getViviendaIdFromUrl(houseData.link);
 
     return houseData;
   }

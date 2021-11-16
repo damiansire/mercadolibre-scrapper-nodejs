@@ -1,3 +1,5 @@
+const { getViviendaIdFromUrl } = require("./meliLibs");
+
 const MeliData = require("./meliGetData");
 const MeliBdDao = require("./meliBdDao");
 
@@ -68,7 +70,9 @@ class ParserHandler {
       apartament.link
     );
     console.info(`Guardando imagenes de ${apartament.link}`);
-    await this.meliBdDao.saveImagesLink(imagesLinks, apartament.link);
+    debugger;
+    const viviendaId = getViviendaIdFromUrl(apartament.link);
+    await this.meliBdDao.saveImagesLink(imagesLinks, viviendaId);
   }
 }
 

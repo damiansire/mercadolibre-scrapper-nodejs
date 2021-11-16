@@ -46,6 +46,7 @@ class MeliBdDao {
     const fields = Object.keys(apartamentData).join(",");
     const text = `INSERT INTO public.viviendas(${fields}) VALUES(${valuesKeys}) RETURNING *`;
     const values = Object.values(apartamentData);
+    debugger;
     try {
       //Si da un error el insert, va al catch
       const res = await this.client.query(text, values);
@@ -68,7 +69,6 @@ class MeliBdDao {
     const text = `INSERT INTO public.imagenes(viviendaid,imageurl) VALUES($1,$2) RETURNING *`;
     const values = [viviendaId, imgLink];
     try {
-      debugger;
       const res = await this.client.query(text, values);
       console.log(
         `Se ha guardado la imagen ${imgLink} de la vivienda ${viviendaId}`

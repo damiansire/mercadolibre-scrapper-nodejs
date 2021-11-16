@@ -51,8 +51,14 @@ function attributeTextToDataBaseName(text) {
   }
 }
 
+function getViviendaIdFromUrl(url) {
+  const idData = url.split("/")[3].split("-");
+  return `${idData[0]}${idData[1]}`;
+}
+
 module.exports = {
   generatePageUrl,
   attributeTextToDataBaseName,
   generateForTodayPageUrl,
+  getViviendaIdFromUrl,
 };
