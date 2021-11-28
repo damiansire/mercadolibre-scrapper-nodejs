@@ -34,30 +34,18 @@ class HousePreviewParser {
 class HousePageParser {
   static async parserHousePage(page) {
     const textAttributeToScrap = {
-      title: ".ui-pdp-title",
-      priceCurrency: ".price-tag-symbol",
-      price: ".price-tag-fraction",
       location: ".ui-vip-location .ui-pdp-media__title",
     };
 
+    const dataPreloaded = await page.evaluate(() => {
+      return __PRELOADED_STATE__.initialState.components;
+    });
+
     let houseData = {};
 
-    //Cambiar por promise.all
-    for (let attribute in textAttributeToScrap) {
-      try {
-        houseData[attribute] = await page.$eval(
-          textAttributeToScrap[attribute],
-          (data) => data.innerText
-        );
-      } catch (error) {
-        console.log("El apartamento ", page.url());
-        console.log("No tiene ", attribute);
-      }
-    }
-
-    //TODO: A futuro, seleccionar los tr y agarrar de ahi las duplas
-
-    //Agregar todoss los atributos
+    houseData.price = dataPreloaded.price.price.value;
+    houseData.priceCurrency = dataPreloaded.price.price.currency_symbol;
+    houseData.title = dataPreloaded.header.title;
 
     //Obtengo los label
     const labelText = await page.$$eval(
@@ -78,6 +66,41 @@ class HousePageParser {
 
     houseData.link = await page.url();
     houseData.id = getViviendaIdFromUrl(houseData.link);
+    houseData.calle = dataPreloaded.location.map_info?.item_address;
+
+    try {
+      const locationData =
+        dataPreloaded.location.map_info?.item_location?.split(",") || [
+          null,
+          null,
+        ];
+      houseData.barrio = locationData[0];
+      houseData.ciudad = locationData[1];
+    } catch (err) {
+      const locationData =
+        dataPreloaded.location.map_info.item_location.split(",");
+      console.error(
+        "Hay un problema con la locacion de",
+        houseData.id,
+        " ",
+        locationData
+      );
+    }
+
+    //Parseo gastos comunes
+    try {
+      const gastosComunesPartes = houseData.gastoscomunes.split(" ");
+      houseData.gastoscomunes = gastosComunesPartes[0];
+      houseData.gastoscomunescurrency = gastosComunesPartes[1];
+    } catch (error) {
+      console.error(
+        "Hay problemas con los gastos comunes de ",
+        houseData.id,
+        " ",
+        houseData.gastosComunes
+      );
+      throw new Error("Problema con los gastos comunes");
+    }
 
     return houseData;
   }

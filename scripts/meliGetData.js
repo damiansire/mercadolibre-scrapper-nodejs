@@ -50,7 +50,8 @@ class MeliData {
     let housesData = [];
     for (let houseElement of housesElement) {
       const houseData = await HousePreviewParser.getLink(houseElement);
-      housesData.push(houseData);
+      const link = houseData.link.split("#")[0];
+      housesData.push(link);
     }
 
     return housesData;

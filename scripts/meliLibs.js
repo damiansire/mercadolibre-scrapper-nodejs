@@ -43,11 +43,12 @@ function attributeTextToDataBaseName(text) {
     "Admite mascotas": "admitemascotas",
     "Apartamentos por piso": "apartamentosporpiso",
     "Cantidad de pisos": "cantidaddepisos",
+    Bodegas: "bodegas",
   };
   if (nameInDataBase[text]) {
     return nameInDataBase[text];
   } else {
-    columnasquefaltanenladb.add(text);
+    console.log(`La columna ${text} falta en la db`);
   }
 }
 
