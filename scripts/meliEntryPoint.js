@@ -9,11 +9,12 @@ class ParserHandler {
     await this.meliData.initBrowser();
   }
 
-  async sendToParserFromBarrio(barrio = "pocitos") {
+  async sendToParserFromBarrio(barrio) {
     const pageAmount = await this.meliData.getPageAmountForBarrio(barrio);
     for (let actualPage = 1; actualPage <= pageAmount; actualPage++) {
       const apartamentLink = await this.meliData.getApartamentsLinks(
-        actualPage
+        actualPage,
+        barrio
       );
       try {
         await saveApartamentsLinks(apartamentLink);

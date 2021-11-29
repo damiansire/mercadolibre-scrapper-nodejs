@@ -39,8 +39,8 @@ class MeliData {
     return Number(pageAmount);
   }
 
-  async getApartamentsLinks(pageNumber) {
-    const pageUrl = generatePageUrl(pageNumber);
+  async getApartamentsLinks(pageNumber, barrio) {
+    const pageUrl = generatePageUrl(pageNumber, barrio);
     //Voy a la url con los apartamento
     await this.page.goto(pageUrl);
     //Aca selecciono un apartamento

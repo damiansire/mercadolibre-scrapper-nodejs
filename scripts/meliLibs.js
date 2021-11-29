@@ -9,7 +9,7 @@ function generatePageUrl(
     fromText = `_Desde_${fromNumber}`;
   }
 
-  const pageUrl = `https://listado.mercadolibre.com.uy/inmuebles/apartamentos/alquiler/${departamento}/${barrio}${fromText}_NoIndex_True`;
+  const pageUrl = `https://listado.mercadolibre.com.uy/inmuebles/apartamentos/alquiler/1-dormitorio/${departamento}/${barrio}/${fromText}_PriceRange_10000UYU-22000UYU_NoIndex_True`;
 
   return pageUrl;
 }

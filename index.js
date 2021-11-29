@@ -5,7 +5,17 @@ async function initApp() {
   const parserHandler = new ParserHandler();
   await parserHandler.setup();
   console.info("Obteniendo los links para enviar a parsear");
-  //await parserHandler.sendToParserFromBarrio("pocitos");
+  const barrios = [
+    "centro",
+    "ciudad-vieja",
+    "cordon",
+    "parque-rodo",
+    "pocitos-nuevo",
+    "tres-cruces",
+  ];
+  for (let index = 0; index < barrios.length; index++) {
+    await parserHandler.sendToParserFromBarrio(barrios[index]);
+  }
   //await parserHandler.sendToParserForToday();
   console.info("Comenzando a parsear la informacion de las casas");
   await parserHandler.startPendingParser();
